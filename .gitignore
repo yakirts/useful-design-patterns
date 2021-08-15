@@ -7,7 +7,7 @@
 # Editor-based HTTP Client requests
 /httpRequests/
 
-/.idea/
+/.idea/*.xml
 *.iml
 *.iws
 *.bin
