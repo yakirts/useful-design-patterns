@@ -29,7 +29,7 @@ class UrlService {
             get("/api/v1") {
                 val urlParams = call.parameters
                 val longUrl = try {
-                    urlShortener.redirect(urlParams["id"]?.toIntOrNull()!!)
+                    urlShortener.redirect(urlParams["url"]!!)
                 }catch (err: Exception){
                     return@get this.call.respond(err.localizedMessage)
                 }
