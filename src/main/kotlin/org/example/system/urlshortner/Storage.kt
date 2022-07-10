@@ -2,7 +2,6 @@ package org.example.system.urlshortner
 
 import org.jetbrains.exposed.dao.*
 import org.jetbrains.exposed.sql.*
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction
 
 
@@ -10,8 +9,6 @@ class ShortUrlPersistenceStorage(private val dbPath: String) {
 
     private val db = DBConnectionHandler.handle("$dbPath/short-url.db")
     val urlOperation = ShortUrlPersistentOperations(db)
-
-
 
 }
 
@@ -34,7 +31,7 @@ class ShortUrlPersistentOperations(private val db: Database) {
     }
 
     fun get(url: String) = transaction(db){
-        Urls.select { Urls.longUrl eq url }.firstOrNull()
+        Urls.select { Urls.longUrl eq url  }.firstOrNull()
     }
 
     fun get(id: Int) = transaction(db){
