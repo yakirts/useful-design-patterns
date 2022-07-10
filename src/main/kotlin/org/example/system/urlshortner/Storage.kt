@@ -34,16 +34,11 @@ class ShortUrlPersistentOperations(private val db: Database) {
         Urls.select { Urls.longUrl eq url  }.firstOrNull()
     }
 
-    fun get(id: Int) = transaction(db){
+    fun get(id: Long) = transaction(db){
         Urls.select { Urls.id eq id  }.firstOrNull()
     }
-
-
-
 }
-
-
-object Urls : IntIdTable() {
+object Urls : LongIdTable() {
     var shortUrl = varchar("shortUrl", 30)
     val longUrl = varchar("longUrl", 255)
 }

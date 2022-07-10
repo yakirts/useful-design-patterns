@@ -10,7 +10,7 @@ class UrlShortener {
     }
 
     fun redirect(url: String): String {
-        val id = url.split("/").last().toInt()
+        val id = url.split("/").last().toLong()
         return storage.urlOperation.get(id)?.get(Urls.longUrl) ?: "Bad url"
     }
 }
