@@ -5,7 +5,7 @@ import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 
 
-class ShortUrlPersistenceStorage(private val dbPath: String) {
+class ShortUrlPersistentStorage(private val dbPath: String) {
 
     private val db = DBConnectionHandler.handle("$dbPath/short-url.db")
     val urlOperation = ShortUrlPersistentOperations(db)
