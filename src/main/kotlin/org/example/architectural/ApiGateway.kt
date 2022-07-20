@@ -1,16 +1,12 @@
 package org.example.architectural
 
+import io.ktor.client.*
+import io.ktor.client.engine.cio.*
+import io.ktor.client.features.json.*
+import io.ktor.client.request.*
+import io.ktor.http.*
+import kotlinx.coroutines.runBlocking
 import java.io.IOException
-import java.net.URI
-import java.net.http.HttpClient
-
-import java.net.http.HttpResponse.BodyHandlers
-
-import java.net.http.HttpRequest
-import java.net.http.HttpResponse
-
-
-
 
 
 /*Here's the Image microservice implementation.*/
@@ -21,14 +17,17 @@ interface ImageClient {
 class ImageClientImpl : ImageClient {
     override val imagePath: String?
         get() {
-            val httpClient: HttpClient? = HttpClient.newHttpClient()
-            val httpGet = HttpRequest.newBuilder()
-                .GET()
-                .uri(URI.create("http://localhost:50005/image-path"))
-                .build()
+            val httpClient =  HttpClient(CIO){
+                Json {
+                    serializer = GsonSerializer()
+                    accept(ContentType.Application.Json)
+                }
+            }
             try {
-                val httpResponse: HttpResponse<String>? = httpClient?.send(httpGet, BodyHandlers.ofString())
-                return httpResponse?.body()
+                val response = runBlocking {
+                    httpClient.get<String>("http://localhost:50005/image-path")
+                }
+                return response
             } catch (e: IOException) {
                 e.printStackTrace()
             } catch (e: InterruptedException) {
@@ -46,14 +45,18 @@ interface PriceClient {
 class PriceClientImpl : PriceClient {
     override val price: String?
         get() {
-            val httpClient = HttpClient.newHttpClient()
-            val httpGet = HttpRequest.newBuilder()
-                .GET()
-                .uri(URI.create("http://localhost:50006/price"))
-                .build()
+            val httpClient =  HttpClient(CIO){
+                Json {
+                    serializer = GsonSerializer()
+                    accept(ContentType.Application.Json)
+                }
+            }
+
             try {
-                val httpResponse = httpClient.send(httpGet, BodyHandlers.ofString())
-                return httpResponse.body()
+                val response = runBlocking {
+                    httpClient.get<String>("http://localhost:50006/price")
+                }
+                return response
             } catch (e: IOException) {
                 e.printStackTrace()
             } catch (e: InterruptedException) {
@@ -63,12 +66,13 @@ class PriceClientImpl : PriceClient {
         }
 }
 
-/*Here we can see how API Gateway maps the requests to the microservices.
+/*
+//Here we can see how API Gateway maps the requests to the microservices.
 class ApiGateway {
-    @Resource
+
     private val imageClient: ImageClient? = null
 
-    @Resource
+
     private val priceClient: PriceClient? = null
 
     @get:RequestMapping(path = "/desktop", method = RequestMethod.GET)

@@ -41,7 +41,8 @@ class SimpleLruCache<V>(val capacity: Int) {
     fun look(v: V){
         if (v in set) {
             cache.remove(v)
-        }else {
+        }
+        else {
             if (cache.size >= capacity) {
                 set.remove(cache.removeFirst())
             }
